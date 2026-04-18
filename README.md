@@ -1,16 +1,49 @@
-# React + Vite
+# SQLook
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Turn any SQL `SELECT` query into an interactive plain-English flowchart.**
 
-Currently, two official plugins are available:
+SQLook parses your query and renders a live diagram showing exactly what data is being pulled and why — useful for reviewing queries, onboarding teammates, or documenting reports.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**[Try it live →](https://juwilly.github.io/SQLook/)**
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What it does
 
-## Expanding the ESLint configuration
+Paste a SQL query and the diagram updates instantly, breaking the query down into connected nodes:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Node | What it represents |
+|---|---|
+| Table | Source tables from `FROM` and `JOIN` clauses, with the columns selected from each |
+| Join | Join type and condition in plain English |
+| Filter | `WHERE` and `HAVING` conditions |
+| Group | `GROUP BY` columns |
+| Window | Window functions (`ROW_NUMBER`, `RANK`, `LAG`, etc.) |
+| Order / Limit | `ORDER BY` and `LIMIT` |
+| Output | Final selected columns with aliases |
+
+CTEs (`WITH` clauses) are shown as their own nodes and referenced by the tables that use them.
+
+## SQL support
+
+- Standard SQL, MySQL, and PostgreSQL syntax
+- `WITH` / CTEs
+- All join types (`INNER`, `LEFT`, `RIGHT`, `FULL OUTER`, `CROSS`)
+- Window functions (`OVER (PARTITION BY ... ORDER BY ...)`)
+- Snowflake `QUALIFY` clause
+- 3-part table names (`catalog.schema.table`)
+
+Not supported: `INSERT`, `UPDATE`, `DELETE`, DDL statements.
+
+## Running locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Tech stack
+
+- [React](https://react.dev) + [Vite](https://vitejs.dev)
+- [React Flow](https://reactflow.dev) — interactive node canvas
+- [node-sql-parser](https://github.com/taozhi8833998/node-sql-parser) — SQL → AST
